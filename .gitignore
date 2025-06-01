@@ -7,5 +7,9 @@ my-element.js
 my-element.js.map
 my-element.d.ts
 my-element.d.ts.map
+provider-registry.js
+provider-registry.js.map
+provider-registry.d.ts
+provider-registry.d.ts.map
 # only generated for size check
 my-element.bundled.js
