@@ -105,7 +105,6 @@ suite('my-element', () => {
 | Command              | Purpose                  |
 | -------------------- | ------------------------ |
 | `npm run lint`       | ESLint with Lit plugin   |
-| `npm run type-check` | `tsc --noEmit`           |
 | `npm run build`      | Rollup production bundle |
 
 **All three must pass** for Codex to mark a PR as ready.
