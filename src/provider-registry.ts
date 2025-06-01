@@ -1,6 +1,11 @@
-import {Context} from '@lit/context';
+import {Context, createContext} from '@lit/context';
 
 export type Token<T> = Context<unknown, T>;
+
+/** Destroy-ref token */
+export const DESTROY_REF: Token<DestroyRef> = createContext<DestroyRef>(
+  Symbol('DestroyRef')
+);
 
 export interface Dep<T> {
   token: Token<T>;
@@ -20,8 +25,19 @@ export interface Provider<T = unknown> {
   dispose?: (instance: T) => void;
 }
 
-export interface DestroyRef {
-  onDestroy(cb: () => void): void;
+export class DestroyRef {
+  private callbacks = new Set<() => void>();
+
+  onDestroy(cb: () => void): void {
+    this.callbacks.add(cb);
+  }
+
+  destroy(): void {
+    for (const cb of this.callbacks) {
+      cb();
+    }
+    this.callbacks.clear();
+  }
 }
 
 /**
