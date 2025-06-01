@@ -6,17 +6,14 @@ This file tells OpenAI Codex (and any other AI agent) exactly **how to read, ext
 
 ## 1 · Directory map Codex must honour
 
-| Path                     | Purpose & Mandatory Rules                                                                                                                      |
-| ------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------- |
-| **`/src/`**              | All authored source code.                                                                                                                      |
-|   `/<component>/`        | *One folder per component*, e.g. **`src/my-element/`**                                                                                         |
-|     `my-element.ts`      | Implementation – a single Lit component exported via `@customElement`.                                                                         |
-|     `my-element_test.ts` | Unit tests for that component (same folder, suffixed `_test.ts`).                                                                              |
-| **`/dev/`**              | Local playground demos loaded by *web-dev-server*. Never bundled.                                                                              |
-| **`/docs-src/`**         | Eleventy markdown/templates. Can be edited; output in `/docs/` is **read-only**.                                                               |
-| **Config files**         | `rollup.config.js`, `web-dev-server.config.js`, `tsconfig.json`, ESLint/Prettier. Codex may touch these but must explain the change in the PR. |
-
-> **Pattern:** `src/<tag-name>/<tag-name>.ts` + `<tag-name>_test.ts` keeps code and tests co-located yet bundled independently.
+| Path                        | Purpose & Mandatory Rules                                                                                                                      |
+| --------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| **`/src/`**                 | All authored source code.                                                                                                                      |
+|   `my-element.ts`           | Implementation – a single Lit component exported via `@customElement`.                                                                         |
+|   test/`my-element_test.ts` | Unit tests for that component (same folder, suffixed `_test.ts`).                                                                              |
+| **`/dev/`**                 | Local playground demos loaded by *web-dev-server*. Never bundled.                                                                              |
+| **`/docs-src/`**            | Eleventy markdown/templates. Can be edited; output in `/docs/` is **read-only**.                                                               |
+| **Config files**            | `rollup.config.js`, `web-dev-server.config.js`, `tsconfig.json`, ESLint/Prettier. Codex may touch these but must explain the change in the PR. |
 
 ---
 
