@@ -11,5 +11,9 @@ provider-registry.js
 provider-registry.js.map
 provider-registry.d.ts
 provider-registry.d.ts.map
+root-injector.js
+root-injector.js.map
+root-injector.d.ts
+root-injector.d.ts.map
 # only generated for size check
 my-element.bundled.js
