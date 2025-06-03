@@ -15,5 +15,9 @@ root-injector.js
 root-injector.js.map
 root-injector.d.ts
 root-injector.d.ts.map
+value-notifier.js
+value-notifier.js.map
+value-notifier.d.ts
+value-notifier.d.ts.map
 # only generated for size check
 my-element.bundled.js

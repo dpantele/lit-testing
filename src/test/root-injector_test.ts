@@ -69,4 +69,81 @@ suite('RootInjector', () => {
     assert.equal(result, 5);
     injector.disposeAll();
   });
+
+  test('inject resolves declared dependency', async () => {
+    const dep = createContext<number>(Symbol('dep-success'));
+    const tok = createContext<number>(Symbol('tok-success'));
+    const depProvider: Provider<number> = {token: dep, value: 2};
+    providerRegistry.register(depProvider as any);
+    const provider: Provider<number> = {
+      token: tok,
+      deps: [{token: dep}],
+      factory: async ({inject}) => (await inject(dep)) + 1,
+    };
+    const host = document.createElement('div');
+    const injector = new RootInjector(host, [provider as any]);
+    let value: number | undefined;
+    host.dispatchEvent(new ContextEvent(tok, host, v => (value = v)));
+    await new Promise(r => setTimeout(r));
+    assert.equal(value, 3);
+    injector.disposeAll();
+  });
+
+  test('required dep missing rejects', async () => {
+    const dep = createContext<number>(Symbol('dep'));
+    const tok = createContext<number>(Symbol('tok'));
+    const provider: Provider<number> = {
+      token: tok,
+      deps: [{token: dep}],
+      factory: async ({inject}) => inject(dep),
+    };
+    const host = document.createElement('div');
+    const injector = new RootInjector(host, [provider as any]);
+    let threw = false;
+    try {
+      await (injector as any).resolve(tok, provider);
+    } catch (e) {
+      threw = true;
+    }
+    assert.isTrue(threw);
+    injector.disposeAll();
+  });
+
+  test('optional dep missing returns undefined', () => {
+    const dep = createContext<number>(Symbol('dep2'));
+    const tok = createContext<number | undefined>(Symbol('tok2'));
+    const provider: Provider<number | undefined> = {
+      token: tok,
+      deps: [{token: dep, optional: true}],
+      factory: async ({injectOptional}) => injectOptional(dep),
+    };
+    const host = document.createElement('div');
+    const injector = new RootInjector(host, [provider as any]);
+    let value: number | undefined;
+    host.dispatchEvent(new ContextEvent(tok, host, v => (value = v)));
+    assert.isUndefined(value);
+    injector.disposeAll();
+  });
+
+  test('dep update reruns factory for subscribers', async () => {
+    const dep = createContext<number>(Symbol('dep3'));
+    const tok = createContext<number>(Symbol('tok3'));
+    const providerA: Provider<number> = {
+      token: tok,
+      deps: [{token: dep}],
+      factory: async ({inject}) => (await inject(dep)) + 1,
+    };
+    const providerB: Provider<number> = {token: dep, value: 1};
+    providerRegistry.register(providerB as any);
+    const host = document.createElement('div');
+    const injector = new RootInjector(host, [providerA as any]);
+    const results: number[] = [];
+    host.dispatchEvent(new ContextEvent(tok, host, v => results.push(v), true));
+    await new Promise(r => setTimeout(r));
+    assert.equal(results[0], 2);
+    providerRegistry.register({token: dep, value: 3} as any);
+    await new Promise(r => setTimeout(r));
+    assert.equal(results[1], 4);
+    injector.disposeAll();
+  });
 });
